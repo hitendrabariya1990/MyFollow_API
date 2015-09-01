@@ -1,0 +1,54 @@
+﻿<h3>Edit  Products</h3>
+
+<div data-ng-app data-ng-controller="ProductController" class="container" ng-init="viewProduct()">
+
+    <div class="form-horizontal">
+        <!--<p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>-->
+
+        
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Company Name:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductData.ProductOwner.CompanyName" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Introduction:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductData.Introduction" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Details:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductData.Details" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Images :</label>
+            <div class="col-md-10">
+                <table>
+                    <tr>
+                        <td data-ng-repeat="items in ProductData.UploadImages">
+                            <img ng-src="Images/{{items.ImageName}}" width="113px" height="113px">
+                             <p><a href="#/DeleteImage/{{items.Id}}">Remove</a> </p>
+                        </td>
+                        <td>
+                           
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <br />
+        <input type="submit" value="Update" data-ng-click="EditProduct(ProductData)" class="btn btn-primary" />
+        <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+        <br /><br />
+
+        <hr />
+
+    </div>
+</div>

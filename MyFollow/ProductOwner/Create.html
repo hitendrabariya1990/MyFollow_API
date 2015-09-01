@@ -1,0 +1,157 @@
+﻿
+<h3>Add New Product Owner</h3>
+
+<div data-ng-app data-ng-controller="ProductOwnerController" class="container" >
+
+    <div class="form-horizontal">
+        <!--<p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>-->
+        <form name="addProductOwner" style="width:1000px;margin:0px auto;">
+            <div class="form-group">
+                <label class="control-label col-md-2">Company Name:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.CompanyName" required />
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="control-label col-md-2">Email Id:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.EmailId" />
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="control-label col-md-2">Description:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Description" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Date of Join:</label>
+                <div class="col-md-10">
+                    <input type="date" class="form-control" data-ng-model="newProductOwner.DateofJoin" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Founded In:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.FoundedIn" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Street 1:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Street1" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Street 2:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Street2" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">City:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.City" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">State:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.State" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Country:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Country" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Pincode:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Pincode" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">ContactNumber:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.ContactNumber" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Website:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Website" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Twitter:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Twitter" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Facebook:</label>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" data-ng-model="newProductOwner.Facebook" required />
+                </div>
+            </div>
+
+            <br />
+            <input type="submit" value="Add" data-ng-click="add()" data-ng-disabled="!addProductOwner.$valid" class="btn btn-primary" />
+            <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+            <br /><br />
+        </form>
+
+        <hr />
+        <!--<table class="table table-bordered table-hover" style="width:800px">
+            <tr>
+                <th>#</th>
+                <td>CompanyName</td>
+                <th>EmailId</th>
+                <th>Description</th>
+                <!--<th>City</th>
+                <th>PostalCode</th>
+                <th>Country</th>
+                <th>ContactNumber</th>
+            </tr>
+
+            <tr data-ng-repeat="ProductOwner in ProductOwners">
+                <td><strong data-ng-hide="ProductOwner.editMode">{{ ProductOwner.Id }}</strong></td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.CompanyName }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.FirstName" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.EmailId }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.EmailId" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.Description }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.Description" />
+                </td>
+                <!--<td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.City }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.City" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.PostalCode }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.PostalCode" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.Country }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.Country" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode">{{ ProductOwner.ContactNumber }}</p>
+                    <input data-ng-show="ProductOwner.editMode" type="text" data-ng-model="ProductOwner.ContactNumber" />
+                </td>
+                <td>
+                    <p data-ng-hide="ProductOwner.editMode"><a data-ng-click="ViewProductOwner(ProductOwner)" href="/#/EditProductOwner">Edit</a> | <a data-ng-click="deleteProductOwner(ProductOwner)" href="javascript:;">Delete</a></p>
+                    <p data-ng-show="ProductOwner.editMode"><a data-ng-click="save(ProductOwner)" href="javascript:;">Save</a> | <a data-ng-click="toggleEdit(ProductOwner)" href="javascript:;">Cancel</a></p>
+                </td>
+            </tr>
+        </table>-->
+    </div>
+</div>
+

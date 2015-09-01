@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MyFollow.Models.Products>
+
+@{
+    ViewBag.Title = "ProductsList";
+    Layout = "~/Views/Shared/_LayoutPageEndUser.cshtml";
+}
+
+<h2>ProductsList</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductOwner.CompanyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Introduction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Details)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductOwner.CompanyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Introduction)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Details)
+        </td>
+        <td>
+           
+            @Html.ActionLink("View In Details", "Details", new { id=item.Id }) 
+           
+        </td>
+    </tr>
+}
+
+</table>
+
+<div>
+    <div class="container-fluid">
+        <div data-ng-view="" class="ng-scope">
+        </div>
+    </div>
+</div>

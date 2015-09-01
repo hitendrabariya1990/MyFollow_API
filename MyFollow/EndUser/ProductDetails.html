@@ -1,0 +1,35 @@
+﻿<h3> Product List</h3>
+
+<div data-ng-app data-ng-controller="EndUserController" class="container" ng-init="GetallProducts()">
+    {{ProductList.length}}
+    <div data-ng-repeat="items1 in ProductList">
+        <span>{{items1.Id}}</span>
+
+    </div>
+    <table class="table table-bordered table-hover" style="width:800px">
+        <tr>
+            <th>#</th>
+            <th>Poid</th>
+            <th>Introduction</th>
+            <th>Details</th>
+            <th></th>
+        </tr>
+
+        <tr data-ng-repeat="items in ProductList">
+            <td><strong>{{ items.Id }}</strong></td>
+            <td>
+                <p>{{ items.Poid }}</p>
+            </td>
+            <td>
+                <p>{{ items.Introduction }}</p>
+            </td>
+            <td>
+                <p>{{ items.Details }}</p>
+            </td>
+            <td>
+                <p><a href="#/EditProduct/{{items.Id}}">Edit</a> |<a href="#/ViewProduct/{{items.Id}}">View</a> | <a data-ng-click="deleteProducts(Products)" href="javascript:;">Delete</a></p>
+            </td>
+
+        </tr>
+    </table>
+</div>

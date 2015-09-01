@@ -1,0 +1,48 @@
+﻿@model MyFollow.Models.Products
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutPageProductOwner.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Products List</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductOwner.CompanyName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProductOwner.CompanyName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Introduction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Introduction)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Details)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Details)
+        </dd>
+
+        @foreach (var item in ViewBag.ImageList)
+        {
+            <img id="img1" src="/images/@item.ImageName" alt="Uploded Images" style="width:200px; height:200px; margin:4px 7px 2px 4px" class="img-thumbnail" />
+            @*@Html.ActionLink("Remove", "Remove", new { id = item.Id ,Productid=Model.Id}, new {@class="btn btn-sucess" })*@
+        }
+
+    </dl>
+
+</div>
+
+   
