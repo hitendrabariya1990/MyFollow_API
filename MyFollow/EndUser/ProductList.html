@@ -1,33 +1,26 @@
 ﻿<h3> Product List</h3>
 
 <div data-ng-app data-ng-controller="EndUserController" class="container" ng-init="GetallProductsList()">
-    {{ProductList.length}}
-    <div data-ng-repeat="items1 in ProductList">
-        <span>{{items1.Id}}</span>
-
-    </div>
     <table class="table table-bordered table-hover" style="width:800px">
         <tr>
             <th>#</th>
-            <th>Poid</th>
-            <th>Introduction</th>
-            <th>Details</th>
-            <th></th>
+            <th>Company</th>
+            <th>Product Name</th>
+            <th>Status</th>
         </tr>
 
         <tr data-ng-repeat="items in ProductList">
             <td><strong>{{ items.Id }}</strong></td>
             <td>
-                <p>{{ items.Poid }}</p>
+                <p>{{ items.CompanyName }}</p>
             </td>
             <td>
-                <p>{{ items.Introduction }}</p>
+                <p>{{ items.ProductName }}</p>
             </td>
+            
             <td>
-                <p>{{ items.Details }}</p>
-            </td>
-            <td>
-                <p>  |<a href="#/viewProductDetails/{{items.Id}}">View Details</a> | </p>
+                    <p>  <a ng-show ="items.Flag == false" data-ng-click="FollowProducts(items)" href="" class="btn btn-success">Follow  </a> </p>
+                    <p>  <a ng-show="items.Flag == true" data-ng-click=" UnFollowProducts(items)" href="" class="btn btn-danger">UnFollow</a>  </p>
             </td>
 
         </tr>

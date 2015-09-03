@@ -4,7 +4,9 @@ AppRoute.controller('ProductController', ['$scope', '$http', '$routeParams', Pro
 function ProductController($scope, $http,$routeParams) {
     $scope.loading = false;
     $scope.addMode = false;
-    
+    $scope.getIframeSrc = function (src) {
+        return 'https://www.youtube.com/embed/' + src;
+    };
     //Add Products
     $scope.addProducts = function () {
         $scope.loading = false;
@@ -29,12 +31,12 @@ function ProductController($scope, $http,$routeParams) {
     //Used to display the data  
 
     $scope.GetallProducts = function () {
-        var id = $('.abc').val().toString(); 
-        $http.get('/api/ProductsAPI/GetProductsList/?id=' + id).success(function (data) {
+        var id = $('.abc').val().toString();
+        $http.get('/api/ProductsAPI/GetProductsList/?id=' + id).success(function(data) {
             $scope.ProductList = data;
             $scope.loading = false;
 
-        })
+        });
     };
 
     //Get Single ProductDetails
@@ -55,14 +57,8 @@ function ProductController($scope, $http,$routeParams) {
         $scope.loading = false;
         var id = $routeParams.Id;
         $http.delete('/api/ProductsAPI/DeleteProducts/?id=' + id).success(function (data) {
-            //alert("Deleted Successfully!!");
-            //$.each($scope.ProductOwners, function (i) {
-            //    if ($scope.ProductOwners[i].Id === id) {
-            //        $scope.ProductOwners.splice(i, 1);
-            //        return false;
-            //    }
-            //});
-            $scope.ProductList = data;
+            alert("Product Deleted Successfully!!");
+            $scope.GetallProducts();
             $scope.loading = false;
         }).error(function (data) {
             $scope.error = "An Error has occured while Saving ProductOwner! " + data;
@@ -73,9 +69,9 @@ function ProductController($scope, $http,$routeParams) {
 
     $scope.EditProduct = function (ProductData) {
         $scope.loading = true;
-        var ProductData1 = this.ProductData;
+        //var ProductData1 = this.ProductData;
         //alert(emp);
-        $http.put('/api/ProductsAPI/EditProducts/?id=' + this.ProductData.Id, ProductData1).success(function (data) {
+        $http.put('/api/ProductsAPI/EditProducts/?id=' + ProductData.Id, ProductData).success(function (data) {
             alert("Edit Successfully!!");
             //  emp.editMode = false;
             $scope.loading = false;
@@ -85,10 +81,18 @@ function ProductController($scope, $http,$routeParams) {
 
         });
     };
-    $scope.removeItem = function (list, item) {
-        
-    };
-    $scope.remove = function (item) {
-        removeItem(item);
+
+    $scope.deleteImages = function (items) {
+        $scope.loading = false;
+        var id1 = $routeParams.Id;
+        $http.delete('/api/ProductsAPI/DeleteImage/?id=' + items.Id).success(function (data) {
+            alert("Image Deleted Successfully!!");
+            $scope.ProductData = data;
+            $scope.loading = false;
+        }).error(function (data) {
+            $scope.error = "An Error has occured while Saving ProductOwner! " + data;
+            $scope.loading = false;
+
+        });
     };
 }

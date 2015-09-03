@@ -1,35 +1,61 @@
-﻿<h3> Product List</h3>
+﻿<h3> Product Details</h3>
 
-<div data-ng-app data-ng-controller="EndUserController" class="container" ng-init="GetallProducts()">
-    {{ProductList.length}}
-    <div data-ng-repeat="items1 in ProductList">
-        <span>{{items1.Id}}</span>
+<div data-ng-app data-ng-controller="EndUserController" class="container" ng-init="viewFollowProductDetails()">
+
+    <div class="form-horizontal">
+        <!--<p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>-->
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Product Name:</label>
+            <div class="col-md-10">
+                <p>{{ ProductData.ProductName }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Introduction:</label>
+            <div class="col-md-10">
+                <p>{{ ProductData.Introduction }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Details :</label>
+            <div class="col-md-10">
+                <p>{{ ProductData.Details }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Video :</label>
+            <div class="col-md-10">
+                <iframe width="300" height="200" ng-src="{{getIframeSrc(ProductData.VideoLink)}}" />
+                <p></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Images :</label>
+            <div class="col-md-10">
+                <table>
+                    <tr>
+                        <td data-ng-repeat="items in ProductData.UploadImages">
+                            <img ng-src="../Images/{{items.ImageName}}" width="150px" height="150px" class="thumbnail">
+                        </td>
+
+                        <!--<td>
+                            <p><a data-ng-click="" href="javascript:;">Remove</a> </p>
+                        </td>-->
+
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+
+        <br />
+        <!--<input type="submit" value="Add" data-ng-click="save(ProductOwner)" data-ng-disabled="!addProductOwner.$valid" class="btn btn-primary" />-->
+        <!--<input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />-->
+        <br /><br />
+
+        <hr />
 
     </div>
-    <table class="table table-bordered table-hover" style="width:800px">
-        <tr>
-            <th>#</th>
-            <th>Poid</th>
-            <th>Introduction</th>
-            <th>Details</th>
-            <th></th>
-        </tr>
-
-        <tr data-ng-repeat="items in ProductList">
-            <td><strong>{{ items.Id }}</strong></td>
-            <td>
-                <p>{{ items.Poid }}</p>
-            </td>
-            <td>
-                <p>{{ items.Introduction }}</p>
-            </td>
-            <td>
-                <p>{{ items.Details }}</p>
-            </td>
-            <td>
-                <p><a href="#/EditProduct/{{items.Id}}">Edit</a> |<a href="#/ViewProduct/{{items.Id}}">View</a> | <a data-ng-click="deleteProducts(Products)" href="javascript:;">Delete</a></p>
-            </td>
-
-        </tr>
-    </table>
 </div>

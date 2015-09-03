@@ -12,6 +12,8 @@ function beginUpload(evt) {
         if (window.FormData !== undefined) {
             var data = new FormData();
             var Input = "";
+            if (files.length < 6)
+                {
             for (i = 0; i < files.length; i++) {
                 data.append("file" + i, files[i]);
                 var img = 'Images/' + files[i].name;
@@ -48,7 +50,8 @@ function beginUpload(evt) {
                 }
             });
         } else {
-            alert("This browser doesn't support HTML5 multiple file uploads!");
+            alert("Not More then 5 Images");
+            }
         }
     }
 }

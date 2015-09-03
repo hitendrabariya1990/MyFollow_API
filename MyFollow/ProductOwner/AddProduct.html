@@ -5,27 +5,48 @@
 
     <div class="form-horizontal">
         <form name="addProduct" enctype="multipart/form-data" method="post" style="width:1000px;margin:0px auto;">
-            <!--<div class="form-group">
-                <label class="control-label col-md-2">Poid</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" data-ng-model="newProduct.Poid" required />
-                </div>
-            </div>-->
             <div class="form-group">
-                <label class="control-label col-md-2">Introduction</label>
+                <label class="control-label col-md-2">Product Name :</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" data-ng-model="newProduct.Introduction" required />
+                    <input type="text" class="form-control" placeholder="Enter Product Name."  data-ng-model="newProduct.ProductName" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Introduction :</label>
+                <div class="col-md-10">
+                    <input type="text" placeholder="Enter Introduction Up to 140 Character." name="Introduction" class="form-control" data-ng-model="newProduct.Introduction" ng-minlength=3 ng-maxlength=140 required />
+                    <div role="alert">
+                        <span style="color:red;" class="has-error" ng-show="addProduct.Introduction.$error.minlength">
+                            Enter More then 3 Character.
+                        </span>
+                        <span style="color:red;" class="has-error" ng-show="addProduct.Introduction.$error.maxlength">
+                            You Enter More then 140 Character.
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-2">Details:</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" data-ng-model="newProduct.Details" required />
+                    <textarea placeholder="Enter Details Up to 1000 Character." name="Details" class="form-control" data-ng-model="newProduct.Details" ng-minlength=3 ng-maxlength=1000 required />
+                    <div role="alert">
+                        <span style="color:red;" class="has-error" ng-show="addProduct.Details.$error.minlength">
+                            Enter More then 3 Character.
+                        </span>
+                        <span style="color:red;" class="has-error" ng-show="addProduct.Details.$error.maxlength">
+                            You Enter More then 1000 Character.
+                        </span>
+                    </div>
                 </div>
             </div>
-
             <div class="form-group">
-                <label class="control-label col-md-2">Upload Images</label>
+                <label class="control-label col-md-2">Video Link:</label>
+                <div class="col-md-10">
+                    <p>https://www.youtube.com/embed/<input type="text" class="form-control" data-ng-model="newProduct.VideoLink" required /></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Upload Images :</label>
                 <div class="col-md-10">
                     <!--<input type="file" name="files" value="" data-ng-model="newProduct.UploadImages" multiple="multiple" />-->
                     <!--<input type="file" name="files" multiple accept="image/*" ng-max-height="1000" ng-max-size="1MB">
@@ -42,12 +63,11 @@
                     <button ng-click='onFileSelect(files)'>Add File</button>-->
 
                     <input type="hidden" id="txtimg" class="form-control" data-ng-model="newProduct.UploadImagesName" />
-
                     <div id="show_images" style="width:auto;"></div>
-
                 </div>
             </div>
 
+           
             <br />
             <input type="submit" value="Add" data-ng-click="addProducts()" data-ng-disabled="!addProduct.$valid" class="btn btn-primary" />
             <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />

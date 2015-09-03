@@ -15,11 +15,19 @@ namespace MyFollow.Models
 
         public int Poid { get; set; }
 
+        [Required]
+        public string  ProductName { get; set; }
+
         [StringLength(140, ErrorMessage = "It is more than 140 Character")]
         public string Introduction { get; set; }
 
-        [StringLength(1000)]
+        [StringLength(1000, ErrorMessage = "It is more than 1000 Character")]
         public string Details { get; set; }
+
+        public string VideoLink { get; set; }
+
+
+      
 
         public List<UploadImages> UploadImages { get; set; }
          
@@ -32,12 +40,17 @@ namespace MyFollow.Models
         public int Id { get; set; }
 
         public int Poid { get; set; }
+        public string CompanyName { get; set; }
+        public string ProductName { get; set; }
 
         public string Introduction { get; set; }
 
         public string Details { get; set; }
 
+        public bool Flag { get; set; }
         public string  UploadImagesName { get; set; }
+
+        public string VideoLink { get; set; }
      
     }
 }

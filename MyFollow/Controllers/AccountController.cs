@@ -87,8 +87,8 @@ namespace MyFollow.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-        //
-        // POST: /Account/Login
+        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -98,22 +98,18 @@ namespace MyFollow.Controllers
             {
                 return View(model);
             }
-
-            // This doen't count login failures towards lockout only two factor authentication
-            // To enable password failures to trigger lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                   // var urole=await RoleManager.FindByIdAsync();
-                    //if(urole)
-                     var user = await UserManager.FindByEmailAsync(model.Email);
+                    var user = await UserManager.FindByEmailAsync(model.Email);
                     var rolename= await UserManager.GetRolesAsync(user.Id);
-                    if (rolename[0].ToString() == "ProductOwner" && user.EmailConfirmed == true)
+                    if (rolename[0] == "ProductOwner" && user.EmailConfirmed == true)
                     {
-                        return RedirectToAction("Index", "ProductOwners", new { Email = user.Email });
+                        //var Pro = db.ProductOwners.FirstOrDefault(x=>x.EmailId== user.Email);
+                        return RedirectToAction("Index", "ProductOwners", new { email = user.Email });
                     }
-                    else if (rolename[0].ToString() == "Admin" )
+                    else if (rolename[0] == "Admin" )
                     {
                         return RedirectToAction("Index"); 
                     }
@@ -133,30 +129,44 @@ namespace MyFollow.Controllers
          [Authorize(Roles = "Admin")]
         public ActionResult AllProductOwner()
         {
-            return View(db.ProductOwners.ToList().Where(r=>r.ApprovalFlag == false));
+            ApplicationUser user1 = new ApplicationUser();
+            var user = UserManager.Users.ToList().Where(r => r.EmailConfirmed == false && r.CompanyName != "");
+            List<RegisterViewModel> regList=new List<RegisterViewModel>();
+            foreach(var item in user)
+            {
+                RegisterViewModel registereg = new RegisterViewModel();
+                registereg.Id = item.Id;
+                registereg.Name = item.Name;
+                registereg.CompanyName = item.CompanyName;
+                registereg.Email = item.Email;
+                regList.Add(registereg);
+            }
+            return View(regList);
         }
 
-       // [HttpPost]
-      //  [ValidateAntiForgeryToken]
          [Authorize(Roles = "Admin")]
-         public async Task<ActionResult> Approve(int id)
+        public async Task<ActionResult> Approve(int id)
         {
             if (ModelState.IsValid)
             {
-                ProductOwner productOwner = db.ProductOwners.Find(id);
-                productOwner.ApprovalFlag = true;
-                db.Entry(productOwner).State = EntityState.Modified;
-                db.SaveChanges();
-               // var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                var user = UserManager.FindByEmailAsync(productOwner.EmailId);
-                var callbackUrl = Url.Action("Login", "Account");
-                await UserManager.SendEmailAsync(user.Id, "Admin Approve your account Sucessfully.", "Thank you For Confirming Your Details.Login For More Details Click on this link: <a href=\"" + callbackUrl + "\">link</a>");
-                ViewBag.Link = callbackUrl;
+               // ProductOwner productOwner = db.ProductOwners.Find(id);
+               // productOwner.ApprovalFlag = true;
+               // db.Entry(productOwner).State = EntityState.Modified;
+               // db.SaveChanges();
+               //// var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+               // var user = UserManager.FindByEmailAsync(productOwner.EmailId);
+               // var callbackUrl = Url.Action("Login", "Account");
+               // await UserManager.SendEmailAsync(user.Id, "Admin Approve your account Sucessfully.", "Thank you For Confirming Your Details.Login For More Details Click on this link: <a href=\"" + callbackUrl + "\">link</a>");
+               // ViewBag.Link = callbackUrl;
+               // return RedirectToAction("AllProductOwner");
+                var code = await UserManager.GenerateEmailConfirmationTokenAsync(id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
                 return RedirectToAction("AllProductOwner");
+
             }
             return RedirectToAction("AllProductOwner");
         }
-
 
          [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
@@ -237,17 +247,17 @@ namespace MyFollow.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,Name=model.Name,CompanyName=model.CompanyName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    ViewBag.Link = callbackUrl;
+                    await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
+                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
+                   // ViewBag.Link = callbackUrl;
                     ViewBag.EmaiId = user.Email;
                     return View("ConfirmRegistration");
-                  //  await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
                 }
                 AddErrors(result);
             }
@@ -289,34 +299,36 @@ namespace MyFollow.Controllers
             {
                 return HttpNotFound();
             }
-            await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
+           // await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
             
             //ProductOwner productOwner = new ProductOwner();
             ViewBag.Email = user.Email;
             TempData["EmailId"] = user.Email;
-            //productOwner.DateofJoin = DateTime.Now;
-            //db.ProductOwners.Add(productOwner);
-            //db.SaveChanges();
+
+            ViewBag.CompanyName = user.CompanyName;
+            TempData["CompanyName"] = user.CompanyName;
+
+            ViewBag.Name = user.Name;
+            TempData["Name"] = user.Name;
+           
             return View();
         }
 
-        // POST: ProductOwners/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddProductOwner(ProductOwner productOwner)
         {
-           // if (ModelState.IsValid)
+            productOwner.EmailId = TempData["EmailId"].ToString();
+            productOwner.OwnerName = TempData["Name"].ToString();
+            productOwner.CompanyName = TempData["CompanyName"].ToString();
+            if (ModelState.IsValid)
             {
-                productOwner.EmailId = TempData["EmailId"].ToString();
                 db.ProductOwners.Add(productOwner);
                 db.SaveChanges();
-
                 return View("ConfirmApproval");
             }
 
-           // return View(productOwner);
+           return View("ConfirmApproval");
         }
         //
         // GET: /Account/ForgotPassword
@@ -460,13 +472,13 @@ namespace MyFollow.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
             switch (result)
             {
                 case SignInStatus.Success:
-                   // var user = await UserManager.FindByEmailAsync(loginInfo.Email);
-                    return RedirectToAction("Index", "EndUser", new { id =1 });
+                    var user = await UserManager.FindAsync(loginInfo.Login);
+                    //return RedirectToAction("Index", "EndUser", new { email = user.Email });
+                    return RedirectToAction("ViewPages", "EndUser");
                    // return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -501,7 +513,7 @@ namespace MyFollow.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -510,7 +522,7 @@ namespace MyFollow.Controllers
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         await UserManager.AddToRolesAsync(user.Id, "User");
-                        return RedirectToAction("Index", "EndUser", new { id = user.Id });
+                        return RedirectToAction("ViewPages", "EndUser");
                     }
                 }
                 AddErrors(result);

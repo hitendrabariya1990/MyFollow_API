@@ -19,6 +19,8 @@ namespace MyFollow
 
         protected void Application_Start()
         {
+            HtmlHelper.ClientValidationEnabled = true;
+            HtmlHelper.UnobtrusiveJavaScriptEnabled = true;
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register); 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

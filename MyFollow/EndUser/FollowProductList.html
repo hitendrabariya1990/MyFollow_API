@@ -1,18 +1,21 @@
 ﻿<h3> Product List</h3>
 
-<div data-ng-app data-ng-controller="ProductController" class="container" ng-init="GetallProducts()">
-   
+<div data-ng-app data-ng-controller="EndUserController" class="container" ng-init="GetallFollowProductsList()">
     <table class="table table-bordered table-hover" style="width:100%">
         <tr>
             <th>#</th>
+            <th>Company</th>
             <th>Product Name</th>
             <th>Introduction</th>
             <th>Details</th>
-            <th></th>
+            <th>View</th>
         </tr>
 
-        <tr data-ng-repeat="items in ProductList">
-            <td><strong>{{ items.Id }}</strong></td>
+        <tr data-ng-repeat="items in FollowProductList">
+            <td><strong>{{ items.ProductId }}</strong></td>
+            <td>
+                <p>{{ items.CompanyName }}</p>
+            </td>
             <td>
                 <p>{{ items.ProductName }}</p>
             </td>
@@ -23,7 +26,8 @@
                 <p>{{ items.Details }}</p>
             </td>
             <td>
-                <p><a href="#/EditProduct/{{items.Id}}" >Edit</a> |<a   href="#/ViewProduct/{{items.Id}}">View</a> | <a data-ng-click="deleteProduct()" href="#/DeleteProduct/{{items.Id}}">Delete</a></p>
+                <p>  <a href="#/ViewProductData/{{items.ProductId}}" class="btn btn-default">View In Details  </a> </p>
+
             </td>
 
         </tr>

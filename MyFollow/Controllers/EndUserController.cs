@@ -13,10 +13,16 @@ namespace MyFollow.Controllers
     {
         private MyFollowContext db = new MyFollowContext();
 
-        [Authorize(Roles = "User")]
-        public ActionResult Index(int id)
+       [Authorize(Roles = "User")]
+        public ActionResult ViewPages(string email)
         {
-            ViewBag.Id = id;
+            ViewBag.Email = email;
+            return View();
+        }
+       
+        public ActionResult Index()
+        {
+            //ViewBag.Email = email;
             return View();
         }
 

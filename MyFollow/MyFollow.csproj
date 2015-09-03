@@ -181,7 +181,6 @@
     <Compile Include="APIControllers\NamedMultipartFormDataStreamProvider.cs" />
     <Compile Include="APIControllers\ProductOwnersAPIController.cs" />
     <Compile Include="APIControllers\ProductsAPIController.cs" />
-    <Compile Include="APIControllers\UploadController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -200,12 +199,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201508181250335_Initial.cs" />
-    <Compile Include="Migrations\201508181250335_Initial.Designer.cs">
-      <DependentUpon>201508181250335_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201509030917442_InitialCreate.cs" />
+    <Compile Include="Migrations\201509030917442_InitialCreate.Designer.cs">
+      <DependentUpon>201509030917442_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\FollowProducts.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProductOwner.cs" />
     <Compile Include="Models\Products.cs" />
@@ -216,6 +216,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="EndUser\FollowProductList.html" />
     <Content Include="EndUser\ProductDetails.html" />
     <Content Include="EndUser\ProductList.html" />
     <Content Include="favicon.ico" />
@@ -228,6 +229,7 @@
     <Content Include="ProductOwner\Details.html" />
     <Content Include="ProductOwner\Edit.html" />
     <Content Include="ProductOwner\EditProduct.html" />
+    <Content Include="ProductOwner\Index.html" />
     <Content Include="ProductOwner\ListProduct.html" />
     <Content Include="ProductOwner\ViewProduct.html" />
     <Content Include="Scripts\angular-animate.js" />
@@ -257,6 +259,7 @@
     <Content Include="Scripts\angular-touch.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\App.js" />
     <Content Include="Scripts\AppRoute.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -1039,7 +1042,10 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Views\ProductOwners\Edit.html" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1102,6 +1108,7 @@
     <Content Include="Views\Home\ViewOwner.cshtml" />
     <Content Include="Views\ProductOwners\View.cshtml" />
     <Content Include="Views\EndUser\Index.cshtml" />
+    <Content Include="Views\EndUser\ViewPages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1117,11 +1124,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201508181250335_Initial.resx">
-      <DependentUpon>201508181250335_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
@@ -1131,6 +1133,11 @@
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\ng-file-upload\ng-file-upload.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201509030917442_InitialCreate.resx">
+      <DependentUpon>201509030917442_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

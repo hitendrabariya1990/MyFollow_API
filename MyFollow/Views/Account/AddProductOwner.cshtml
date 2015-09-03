@@ -3,15 +3,15 @@
 @{
     ViewBag.Title = "AddProductOwner";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    HtmlHelper.ClientValidationEnabled = true;
 }
 
 <h2>AddProductOwner</h2>
 
-
 @using (Html.BeginForm("AddProductOwner", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    
+    @Html.ValidationSummary(true)
     <div class="form-horizontal">
         <h4>ProductOwner</h4>
         <hr />
@@ -24,13 +24,17 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.OwnerName , htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                <input type="text" value="@ViewBag.Name" readonly="readonly" class="form-control" />
             </div>
         </div>
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" value="@ViewBag.CompanyName" readonly="readonly" class="form-control" />
+            </div>
+        </div>
         
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })

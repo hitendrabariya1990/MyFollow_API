@@ -1,8 +1,10 @@
-﻿var AppRoute = angular.module('AppRoute', ['ngRoute']);
+﻿"use strict";
+
+var AppRoute = angular.module('AppRoute', ['ngRoute']);
 AppRoute.controller('ProductOwnerController', ['$scope', '$http', ProductOwnerController]);
 AppRoute.controller('ProductController', ['$scope', '$http', '$routeParams', ProductController]);
 AppRoute.controller('EndUserController', ['$scope', '$http', '$routeParams', EndUserController]);
-var configFunction = function ($routeProvider) {
+var configFunction = function ($routeProvider, $locationProvider) {
     $routeProvider.
         when('/NewProductOwner', {
             templateUrl: 'ProductOwner/Create.html',
@@ -37,21 +39,34 @@ var configFunction = function ($routeProvider) {
             templateUrl: 'ProductOwner/ListProduct.html',
             controller: "ProductController"
         })
-        .when('/DeleteImages/:Id', {
-            templateUrl: 'ProductOwner/ViewProduct.html',
+        .when('/DeleteImage/:Id', {
+            templateUrl: 'ProductOwner/EditProduct.html',
             controller: "ProductController"
         })
         .when('/ListProductData', {
-            templateUrl: 'EndUser/ProductList.html',
+            templateUrl: 'ProductList.html',
             controller: "EndUserController"
         })
-    .otherwise('/List', {
-        templateUrl: 'EndUser/ProductList.html',
+        .when('/ListFollowProducts', {
+            templateUrl: 'FollowProductList.html',
+            controller: "EndUserController"
+        })
+         .when('/ViewProductData/:Id', {
+             templateUrl: 'ProductDetails.html',
+             controller: "EndUserController"
+         })
+    .otherwise('/', {
+        templateUrl: 'Index.html',
         controller: "EndUserController"
-       
-    })
-    ;
+    });
+    
 }
-configFunction.$inject = ['$routeProvider'];
-
+configFunction.$inject = ['$routeProvider', '$locationProvider'];
 AppRoute.config(configFunction);
+
+AppRoute.config(function ($sceDelegateProvider) {
+    $sceDelegateProvider.resourceUrlWhitelist([
+      'self',
+      'https://www.youtube.com/**'
+    ]);
+});

@@ -41,7 +41,7 @@
             <p>&copy; @DateTime.Now.Year - My Follow</p>
         </footer>
     </div>
-    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/angularjs")
@@ -50,7 +50,11 @@
     <script src="~/Scripts/knockout-2.0.0.debug.js"></script>
     <script src="~/Scripts/multi-uploader.js"></script>*@
 
-    @RenderSection("scripts", required: false)
+   @RenderSection("scripts", required: false)
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+ 
 
 </body>
 </html>

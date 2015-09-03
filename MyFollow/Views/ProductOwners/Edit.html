@@ -1,0 +1,109 @@
+﻿<h3>Edit  Profile</h3>
+
+<div data-ng-app data-ng-controller="ProductOwnerController" class="container" ng-init="viewProductOwner()">
+
+    <div class="form-horizontal">
+        <!--<p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>-->
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Email Id:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.EmailId" required readonly />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Company Name:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.CompanyName" required />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Description:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Description" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Date of Join:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.DateofJoin" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Founded In:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.FoundedIn" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Street 1:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Street1" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Street 2:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Street2" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">City:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.City" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">State:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.State" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Country:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Country" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Pincode:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Pincode" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">ContactNumber:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.ContactNumber" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Website:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Website" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Twitter:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Twitter" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Facebook:</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" data-ng-model="ProductOwnerData.Facebook" required />
+            </div>
+        </div>
+
+        <br />
+        <input type="submit" value="Edit" data-ng-click="save(ProductOwnerData)" class="btn btn-primary" />
+        <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+        <br /><br />
+
+        <hr />
+
+    </div>
+</div>

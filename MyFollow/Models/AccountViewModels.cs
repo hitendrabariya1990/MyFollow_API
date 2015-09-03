@@ -65,13 +65,21 @@ namespace MyFollow.Models
 
     public class RegisterViewModel
     {
+       
+        [Display(Name = "Id")]
+        public int  Id { get; set; }
+
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
+        
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
+
 
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage="Not Valid Email Address")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

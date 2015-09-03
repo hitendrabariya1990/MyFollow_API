@@ -52,6 +52,7 @@ namespace MyFollow.APIControllers
         [HttpGet]
         [Route("api/ProductOwnersAPI/GetProductOwner")]
         [ResponseType(typeof(ProductOwner))]
+        [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult GetProductOwner(int id)
         {
             ProductOwner productOwner = db.ProductOwners.Find(id);
@@ -67,6 +68,7 @@ namespace MyFollow.APIControllers
         //[ResponseType(typeof(ProductOwner))]
         // PUT: api/ProductOwnersAPI/5
         [ResponseType(typeof(void))]
+        [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult PutProductOwner(int id, ProductOwner productOwner)
         {
             if (!ModelState.IsValid)
@@ -104,6 +106,7 @@ namespace MyFollow.APIControllers
         [HttpPost]
         [Route("api/ProductOwnersAPI")]
         [ResponseType(typeof(ProductOwner))]
+        [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult PostProductOwner(ProductOwner productOwner)
         {
 
@@ -127,6 +130,7 @@ namespace MyFollow.APIControllers
 
         // DELETE: api/ProductOwnersAPI/5
         [ResponseType(typeof(ProductOwner))]
+        [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult DeleteProductOwner(int id)
         {
             ProductOwner productOwner = db.ProductOwners.Find(id);

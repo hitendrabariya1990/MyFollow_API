@@ -13,29 +13,32 @@ namespace MyFollow.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [StringLength(100, MinimumLength = 1)]
+        public string OwnerName { get; set; }
+
         [StringLength(50, ErrorMessage = "Company name cannot be longer than 50 characters.")]
         public string CompanyName { get; set; }
 
 
-        [Required]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string EmailId { get; set; }
 
-        [StringLength(150, MinimumLength = 1)]
+        [Required]
+        [StringLength(150, MinimumLength = 1, ErrorMessage = "Descrption name cannot be longer than 150 characters.")]
         public string Description { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
-
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateofJoin { get; set; }
 
 
         public string FoundedIn { get; set; }
 
-        [StringLength(100)]
+        [StringLength(100,ErrorMessage="Not More then 100 Character")]
         public string Street1 { get; set; }
 
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Not More then 100 Character")]
         public string Street2 { get; set; }
 
         public string City { get; set; }
@@ -47,7 +50,7 @@ namespace MyFollow.Models
         public int Pincode { get; set; }
 
         [RegularExpression(@"^\d+$", ErrorMessage = "Please enter proper contact details.")]
-        [Required]
+        [StringLength (10)]
         [Display(Name = "Contact No")]
         public string ContactNumber { get; set; }
 

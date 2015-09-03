@@ -63,25 +63,26 @@ namespace MyFollow.Controllers
 
 
         // GET: ProductOwners
-        public ActionResult Index(string Email)
+        public ActionResult Index(string email)
         {
-            Session["Email"] = Email.ToString();
-            ProductOwner productOwner = db.ProductOwners.FirstOrDefault(x =>x.EmailId == Email);
-            ViewBag.Id = productOwner.Id;
+            Session["Email"] = email;
+            var product = db.ProductOwners.FirstOrDefault(x => x.EmailId == email);
+            if(product != null)
+            { 
+                ViewBag.Id = product.Id;
+            }
             return View();
         }
 
-      
-
         // GET: ProductOwners/Details/5
-        public ActionResult Details(string  Email)
+        public ActionResult Details(string email)
         {
-            if (Email == null)
+            if (email == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Session["Email"] = Email.ToString();
-            ProductOwner productOwner = db.ProductOwners.FirstOrDefault(x =>x.EmailId == Email);
+            Session["Email"] = email;
+            ProductOwner productOwner = db.ProductOwners.FirstOrDefault(x => x.EmailId == email);
             if (productOwner == null)
             {
                 return HttpNotFound();
@@ -121,15 +122,14 @@ namespace MyFollow.Controllers
         //}
 
         // GET: ProductOwners/Edit/5
-        public async Task<ActionResult> Edit()
+        public ActionResult Edit()
         {
-            string Email = Session["Email"].ToString();
-            if (Email == null)
+            if (Session["Email"] == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            ProductOwner productOwner = db.ProductOwners.FirstOrDefault(x => x.EmailId == Email);
+            string email = Session["Email"].ToString();
+            ProductOwner productOwner = db.ProductOwners.FirstOrDefault(x => x.EmailId == email);
             if (productOwner == null)
             {
                 return HttpNotFound();
@@ -142,7 +142,7 @@ namespace MyFollow.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit( ProductOwner productOwner)
+        public ActionResult Edit( ProductOwner productOwner)
         {
             if (ModelState.IsValid)
             {

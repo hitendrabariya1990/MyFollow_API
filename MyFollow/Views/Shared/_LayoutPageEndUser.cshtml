@@ -21,13 +21,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                   <li>@Html.ActionLink("Home", "Index", "EndUser")</li>
+                   <li>@Html.ActionLink("Home", "ViewPages", "EndUser")</li>
                        @*   <li>@Html.ActionLink("About", "About", "Home")</li>
     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
     @*<li>@Html.ActionLink("ProductOwner", "Create", "ProductOwners")</li>
         <li>@Html.ActionLink("Products", "Create", "Products")</li>*@
                     <li data-ng-app data-ng-controller="EndUserController"><a href="#/ListProductData">List Products</a></li>
-                    <li data-ng-app data-ng-controller="EndUserController"><a href="">Follow Products</a></li>
+                    <li data-ng-app data-ng-controller="EndUserController"><a href="#/ListFollowProducts">Follow Products</a></li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

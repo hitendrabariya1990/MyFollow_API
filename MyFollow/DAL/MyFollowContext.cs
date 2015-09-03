@@ -34,8 +34,7 @@ namespace MyFollow.DAL
         public string Description { get; set; }
 
         public ApplicationRole() : base() { }
-        public ApplicationRole(string name)
-            : this()
+        public ApplicationRole(string name) : this()
         {
             this.Name = name;
         }
@@ -50,8 +49,12 @@ namespace MyFollow.DAL
 
     public class ApplicationUser : IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>, IUser<int>
     {
-        public async Task<ClaimsIdentity>
-            GenerateUserIdentityAsync(UserManager<ApplicationUser, int> manager)
+        [Required]
+        public string Name { get; set; }
+
+        public string CompanyName { get; set; }
+
+        public async Task<ClaimsIdentity>  GenerateUserIdentityAsync(UserManager<ApplicationUser, int> manager)
         {
             var userIdentity = await manager
                 .CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
@@ -85,6 +88,8 @@ namespace MyFollow.DAL
 
         public DbSet<UploadImages> UploadImageses { get; set; }
 
+
+        public DbSet<FollowProducts> FollowProducts { get; set; }
       //  public DbSet<T> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
