@@ -1,20 +1,16 @@
 ﻿using System.Data.Entity;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Policy;
 using Microsoft.AspNet.Identity;
 using MyFollow.DAL;
 using MyFollow.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
 namespace MyFollow.APIControllers
 {
-    public class EndUserAPIController : ApiController
+    public class EndUserapiController : ApiController
     {
         public MyFollowContext Db = new MyFollowContext();
         public ProductsList ProductsList;
@@ -28,8 +24,8 @@ namespace MyFollow.APIControllers
         {
             var userid = User.Identity.GetUserId();
             ProductsLists = new List<ProductsList>();
-            var productses = Db.Productses.ToList();
-            if (productses == null)
+            var productses = Db.MainProducts.ToList();
+            if (productses.FirstOrDefault() == null)
             {
                 return NotFound();
             }
@@ -37,7 +33,7 @@ namespace MyFollow.APIControllers
             {
                 ProductsList = new ProductsList();
                 int user = Convert.ToInt32(userid);
-                var follower = Db.FollowProducts.FirstOrDefault(x => x.ProductId == item.Id && x.Euid == user);
+                var follower = Db.FollowProducts.FirstOrDefault(x => x.MProductId == item.Id && x.Euid == user);
                 if (follower != null)
                 {
                     ProductsList.Flag = true;
@@ -51,7 +47,6 @@ namespace MyFollow.APIControllers
                 ProductsList.ProductName = item.ProductName;
                 ProductsLists.Add(ProductsList);
             }
-            
             return Ok(ProductsLists);
         }
 
@@ -65,18 +60,19 @@ namespace MyFollow.APIControllers
             var userId = User.Identity.GetUserId();
             int userid = Convert.ToInt32(userId);
             var productses = (from x in Db.FollowProducts
-                                  join p in Db.Productses on x.ProductId equals p.Id
-                                  where x.Euid == userid
-                                  select new
-                                  {
-                                      ProductId=x.ProductId,
-                                      CompanyName=p.ProductOwner.CompanyName,
-                                      ProductName=p.ProductName,
-                                      Introduction=p.Introduction,
-                                      Details=p.Details
+                              join p in Db.MainProducts on x.MProductId equals p.Id
+                              join p1 in Db.Productses on p.Id equals p1.MProductId
+                              where x.Euid == userid
+                              select new
+                              {
+                                  p1.Id,
+                                  p1.MainProduct.ProductOwner.CompanyName,
+                                  p.ProductName,
+                                  p1.Introduction,
+                                  p1.Details
 
-                                  });
-            if (productses == null)
+                              });
+            if (productses.FirstOrDefault() == null)
             {
                 return NotFound();
             }
@@ -90,7 +86,6 @@ namespace MyFollow.APIControllers
         [Authorize(Roles = "User")]
         public IHttpActionResult GetFollowProducts(int id)
         {
-            //Products products = db.Productses.FirstOrDefault(x=>x.Id == id);
             var productses = Db.Productses.Include(a=>a.UploadImages);
             var products = productses.FirstOrDefault(x => x.Id == id);
             if (products == null)
@@ -104,7 +99,6 @@ namespace MyFollow.APIControllers
         [HttpPost]
         [Route("api/EndUserAPI")]
         [Authorize(Roles = "User")]
-       // [ResponseType(typeof(Products))]
         public IHttpActionResult PostProducts(ProductsList productsList)
         {
             if (!ModelState.IsValid)
@@ -114,11 +108,10 @@ namespace MyFollow.APIControllers
             var userid = User.Identity.GetUserId();
             var followProducts = new FollowProducts();
             followProducts.Euid = Convert.ToInt32(userid);
-            followProducts.ProductId = productsList.Id;
+            followProducts.MProductId = productsList.Id;
+            
             Db.FollowProducts.Add(followProducts);
             Db.SaveChanges();
-           
-            // return CreatedAtRoute("api/ProductsAPI/GetProductses", new { id = productes.Id }, productes);
             return Ok();
         }
 
@@ -129,12 +122,12 @@ namespace MyFollow.APIControllers
         {
             var userid = User.Identity.GetUserId();
             int user = Convert.ToInt32(userid);
-            var follower = Db.FollowProducts.FirstOrDefault(x => x.ProductId == id && x.Euid == user);
+            var follower = Db.FollowProducts.FirstOrDefault(x => x.MProductId == id && x.Euid == user);
             if (follower == null)
             {
                 return NotFound();
             }
-           // var poid = followproducts.Poid;
+            // var poid = followproducts.Poid;
             Db.FollowProducts.Remove(follower);
             Db.SaveChanges();
             return Ok();

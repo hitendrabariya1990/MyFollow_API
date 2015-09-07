@@ -1,62 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Drawing;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using MyFollow.DAL;
 using MyFollow.Models;
-using System.Web;
-using System.Threading.Tasks;
 
 namespace MyFollow.APIControllers
 {
-    public class ProductsAPIController : ApiController
+    public class ProductsapiController : ApiController
     {
-
-        private MyFollowContext db = new MyFollowContext();
-        
-        // GET: api/ProductsAPI
+        MyFollowContext db = new MyFollowContext();
+       
         [HttpGet]
         [Route("api/ProductsAPI/GetProductsList")]
         [Authorize(Roles = "ProductOwner")]
        // [ResponseType(typeof(Products))]
         public IHttpActionResult GetProductses(int id)
         {
-            List<ProductsList> proList=new List<ProductsList>();
-            var productOwner = db.ProductOwners.FirstOrDefault(x=>x.Id == id);
-            if(productOwner != null)
-            { 
-                var product = productOwner.Products.ToList();
-                
-                foreach(var item in product)
-                {
-                    ProductsList productList = new ProductsList();
-                    productList.Id = item.Id;
-                    productList.Poid = item.Poid;
-                    productList.ProductName = item.ProductName;
-                    productList.Introduction = item.Introduction;
-                    productList.Details = item.Details;
-                    proList.Add(productList);
-                }
-                return Ok(proList);
-            }
-            return Ok(proList);
+           var productlist=(from x in db.MainProducts
+                                 join p in db.Productses on x.Id equals p.MProductId
+                                 where x.Poid == id
+                                 select new
+                                 {
+                                     x.Id,x.ProductName,p.Introduction,p.Details,
+                                     ProductId=p.Id
+                                 });
+            return Ok(productlist.ToList());
         }
 
-        // GET: api/ProductsAPI/5
         [HttpGet]
         [Route("api/ProductsAPI/GetProducts")]
         [ResponseType(typeof(Products))]
         [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult GetProducts(int id)
         {
-            //Products products = db.Productses.FirstOrDefault(x=>x.Id == id);
             var productses = db.Productses.Include(p => p.UploadImages);
             var products=productses.FirstOrDefault(x=>x.Id == id);
             if (products == null)
@@ -66,7 +45,7 @@ namespace MyFollow.APIControllers
             return Ok(products);
         }
 
-        // PUT: api/ProductsAPI/5
+        // PUT
          [Route("api/ProductsAPI/EditProducts")]
         [ResponseType(typeof(void))]
         [Authorize(Roles = "ProductOwner")]
@@ -94,16 +73,12 @@ namespace MyFollow.APIControllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/ProductsAPI
+        // POST
         [HttpPost]
         [Route("api/ProductsAPI")]
         [ResponseType(typeof(Products))]
@@ -115,8 +90,8 @@ namespace MyFollow.APIControllers
                 return BadRequest(ModelState);
             }
             Products productes = new Products();
-            productes.Poid = productsList.Poid;
-            productes.ProductName = productsList.ProductName;
+            //productes. = productsList.Poid;
+            productes.MProductId = productsList.MProductId;
             productes.Introduction = productsList.Introduction;
             productes.Details = productsList.Details;
             productes.VideoLink = productsList.VideoLink;
@@ -136,12 +111,10 @@ namespace MyFollow.APIControllers
                     db.SaveChanges();
                 }
             }
-
-           // return CreatedAtRoute("api/ProductsAPI/GetProductses", new { id = productes.Id }, productes);
             return  Ok(productes);
         }
 
-        // DELETE: api/ProductsAPI/5
+        // DELETE
          [Route("api/ProductsAPI/DeleteProducts")]
         [ResponseType(typeof(Products))]
         [Authorize(Roles = "ProductOwner")]
@@ -152,10 +125,11 @@ namespace MyFollow.APIControllers
             {
                 return NotFound();
             }
-            var poid = products.Poid;
+           // var poid = products.Poid;
             db.Productses.Remove(products);
             db.SaveChanges();
-            return Ok(poid);
+            //return Ok(poid);
+            return Ok();
         }
 
         [Route("api/ProductsAPI/DeleteImage")]
@@ -194,5 +168,49 @@ namespace MyFollow.APIControllers
         {
             return db.Productses.Count(e => e.Id == id) > 0;
         }
+
+        [HttpPost]
+        [Route("api/ProductsAPI/PostMainProduct")]
+        [ResponseType(typeof(Products))]
+        [Authorize(Roles = "ProductOwner")]
+        public IHttpActionResult PostMainProduct(ProductsList productsList)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            MainProduct mproductes = new MainProduct();
+            mproductes.Poid = productsList.Poid;
+            mproductes.ProductName = productsList.ProductName;
+            db.MainProducts.Add(mproductes);
+            db.SaveChanges();
+           
+            return Ok(mproductes);
+        }
+
+        [HttpGet]
+        [Route("api/ProductsAPI/GetMainProductsList")]
+        [Authorize(Roles = "ProductOwner")]
+        // [ResponseType(typeof(Products))]
+        public IHttpActionResult GetMainProductses(int id)
+        {
+            var mainproduct = db.MainProducts.ToList().Where(x=>x.Poid == id);
+            return Ok(mainproduct);
+        }
+
+        //[Route("api/ProductsAPI/DeleteMainProducts")]
+        //[ResponseType(typeof(Products))]
+        //[Authorize(Roles = "ProductOwner")]
+        //public IHttpActionResult DeleteMianProduct(int id)
+        //{
+        //    MainProduct products = db.MainProducts.Find(id);
+        //    if (products == null)
+        //    {
+        //        return NotFound();
+        //    } 
+        //    db.MainProducts.Remove(products);
+        //    db.SaveChanges();
+        //    return Ok();
+        //}
     }
 }

@@ -19,6 +19,10 @@ var configFunction = function ($routeProvider, $locationProvider) {
             templateUrl: 'ProductOwner/Edit.html',
             controller: "ProductOwnerController"
         })
+        .when('/AddNewMainProduct/:Id', {
+            templateUrl: 'ProductOwner/AddMainProduct.html',
+            controller: "ProductController"
+        })
         .when('/AddNewProduct/:Id', {
             templateUrl: 'ProductOwner/AddProduct.html',
             controller: "ProductController"

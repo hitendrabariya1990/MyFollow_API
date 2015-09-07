@@ -12,7 +12,7 @@
         </tr>
 
         <tr data-ng-repeat="items in FollowProductList">
-            <td><strong>{{ items.ProductId }}</strong></td>
+            <td><strong>{{ items.Id }}</strong></td>
             <td>
                 <p>{{ items.CompanyName }}</p>
             </td>
@@ -26,7 +26,7 @@
                 <p>{{ items.Details }}</p>
             </td>
             <td>
-                <p>  <a href="#/ViewProductData/{{items.ProductId}}" class="btn btn-default">View In Details  </a> </p>
+                <p>  <a href="#/ViewProductData/{{items.Id}}" class="btn btn-default">View In Details  </a> </p>
 
             </td>
 

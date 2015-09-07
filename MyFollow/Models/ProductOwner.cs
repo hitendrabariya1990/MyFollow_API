@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MyFollow.Models
 {
@@ -47,6 +45,8 @@ namespace MyFollow.Models
 
         public string Country { get; set; }
 
+        [RegularExpression(@"^\d+$", ErrorMessage = "Not a valid Pin Code")]
+       // [StringLength(6)]
         public int Pincode { get; set; }
 
         [RegularExpression(@"^\d+$", ErrorMessage = "Please enter proper contact details.")]
@@ -54,10 +54,13 @@ namespace MyFollow.Models
         [Display(Name = "Contact No")]
         public string ContactNumber { get; set; }
 
+        [Url(ErrorMessage = "Not Valid Url Format")]
         public string Website { get; set; }
-
+         
+        [Url(ErrorMessage = "Not Valid Url Format")]
         public string Twitter { get; set; }
 
+         [Url(ErrorMessage = "Not Valid Url Format")]
         public string Facebook { get; set; }
 
         public string Password { get; set; }

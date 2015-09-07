@@ -16,11 +16,10 @@ function beginUpload(evt) {
                 {
             for (i = 0; i < files.length; i++) {
                 data.append("file" + i, files[i]);
-                var img = 'Images/' + files[i].name;
+                var img = '../Images/' + files[i].name;
                 $('<img />').attr('src', img.toString()).width('113px').height('113px').attr('class', "img-thumbnail").attr('id', i.toString()).appendTo($('#show_images'))
                 Input += files[i].name + ",";
             }
-      //      $scope.newProduct.UploadImagesName = Input;
             $('#txtimg').val(Input.toString());
             $('#txtimg').focus();
             $.ajax({

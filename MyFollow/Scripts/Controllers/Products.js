@@ -29,7 +29,6 @@ function ProductController($scope, $http,$routeParams) {
     };
 
     //Used to display the data  
-
     $scope.GetallProducts = function () {
         var id = $('.abc').val().toString();
         $http.get('/api/ProductsAPI/GetProductsList/?id=' + id).success(function(data) {
@@ -84,10 +83,48 @@ function ProductController($scope, $http,$routeParams) {
 
     $scope.deleteImages = function (items) {
         $scope.loading = false;
-        var id1 = $routeParams.Id;
-        $http.delete('/api/ProductsAPI/DeleteImage/?id=' + items.Id).success(function (data) {
+       $http.delete('/api/ProductsAPI/DeleteImage/?id=' + items.Id).success(function (data) {
             alert("Image Deleted Successfully!!");
             $scope.ProductData = data;
+            $scope.loading = false;
+        }).error(function (data) {
+            $scope.error = "An Error has occured while Saving ProductOwner! " + data;
+            $scope.loading = false;
+
+        });
+    };
+
+     //Add Products
+    $scope.addMainProducts = function () {
+        $scope.loading = false;
+        var poid = $('.abc').val().toString();
+        this.newProduct.Poid = poid;
+        $http.post('/api/ProductsAPI/PostMainProduct', this.newProduct).success(function (data) {
+           alert('Product Added Sucessfully.');
+            $scope.GetallMainProducts();
+            $scope.loading = false;
+        }).error(function (data) {
+            $scope.error = "An Error has occured while Adding ProductOwner! " + data;
+            $scope.loading = false;
+
+        });
+    };
+
+    $scope.GetallMainProducts = function () {
+        var id = $('.abc').val().toString();
+        $http.get('/api/ProductsAPI/GetMainProductsList/?id=' + id).success(function (data) {
+            $scope.MainProductList = data;
+            $scope.loading = false;
+
+        });
+    };
+
+    $scope.deleteMainProduct = function (items) {
+        $scope.loading = false;
+       // var id = $routeParams.Id;
+        $http.delete('/api/ProductsAPI/DeleteMainProducts/?id=' + items.id).success(function (data) {
+            alert("Product Deleted Successfully!!");
+            $scope.GetallMainProducts();
             $scope.loading = false;
         }).error(function (data) {
             $scope.error = "An Error has occured while Saving ProductOwner! " + data;

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Configuration;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
 using System.Security.Claims;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-//using MyFollow.Migrations;
+using MyFollow.Migrations;
 using MyFollow.Models;
 using System.Threading.Tasks;
 
@@ -29,25 +23,24 @@ namespace MyFollow.DAL
     public class ApplicationUserClaim : IdentityUserClaim<int> { }
     public class ApplicationUserRole : IdentityUserRole<int> { }
 
-    public class ApplicationRole : IdentityRole<int, ApplicationUserRole>, IRole<int>
+    public class ApplicationRole : IdentityRole<int, ApplicationUserRole>
     {
         public string Description { get; set; }
 
-        public ApplicationRole() : base() { }
+        public ApplicationRole()  { }
         public ApplicationRole(string name) : this()
         {
-            this.Name = name;
+            Name = name;
         }
 
-        public ApplicationRole(string name, string description)
-            : this(name)
+        public ApplicationRole(string name, string description): this(name)
         {
-            this.Description = description;
+            Description = description;
         }
     }
 
 
-    public class ApplicationUser : IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>, IUser<int>
+    public class ApplicationUser : IdentityUser<int, ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>
     {
         [Required]
         public string Name { get; set; }
@@ -64,23 +57,11 @@ namespace MyFollow.DAL
 
     public class MyFollowContext : IdentityDbContext<ApplicationUser, ApplicationRole, int,ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>
     {
-        public MyFollowContext()
-            : base("MyFollowContext")
+        public MyFollowContext(): base("MyFollowContext")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyFollowContext, MyFollow.Migrations.Configuration>("MyFollowContext"));
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyFollowContext,Configuration>("MyFollowContext"));
-            Database.SetInitializer<MyFollowContext>(new CreateDatabaseIfNotExists<MyFollowContext>());
-           // Database.SetInitializer<MyFollowContext>(new ApplicationDbInitializer());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyFollowContext, Configuration>("MyFollowContext"));
+            Database.SetInitializer(new CreateDatabaseIfNotExists<MyFollowContext>());
         }
-
-       
-        static MyFollowContext()
-        {
-            //Database.SetInitializer<MyFollowContext>(new DropCreateDatabaseIfModelChanges<MyFollowContext>());
-            Database.SetInitializer<MyFollowContext>(new ApplicationDbInitializer());
-        }
-
-       
 
         public DbSet<ProductOwner> ProductOwners { get; set; }
 
@@ -88,49 +69,43 @@ namespace MyFollow.DAL
 
         public DbSet<UploadImages> UploadImageses { get; set; }
 
+        public DbSet<MainProduct> MainProducts { get; set; }
 
         public DbSet<FollowProducts> FollowProducts { get; set; }
-      //  public DbSet<T> Users { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
 
         public static MyFollowContext Create()
         {
             return new MyFollowContext();
         }
 
-       // public System.Data.Entity.DbSet<MyFollow.DAL.ApplicationUser> ApplicationUsers { get; set; }
-
     }
-    public class ApplicationUserStore :UserStore<ApplicationUser, ApplicationRole, int,ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>, IUserStore<ApplicationUser, int>, IDisposable
+    
+    public class ApplicationUserStore :UserStore<ApplicationUser, ApplicationRole, int,ApplicationUserLogin, ApplicationUserRole, ApplicationUserClaim>
     {
-        public ApplicationUserStore()
-            : this(new IdentityDbContext())
+        public ApplicationUserStore(): this(new IdentityDbContext())
         {
-            base.DisposeContext = true;
+            DisposeContext = true;
         }
 
         public ApplicationUserStore(DbContext context)
             : base(context)
         {
+
         }
     }
 
-
-    public class ApplicationRoleStore: RoleStore<ApplicationRole, int, ApplicationUserRole>, IQueryableRoleStore<ApplicationRole, int>, IRoleStore<ApplicationRole, int>, IDisposable
+    public class ApplicationRoleStore: RoleStore<ApplicationRole, int, ApplicationUserRole>
     {
         public ApplicationRoleStore()
             : base(new IdentityDbContext())
         {
-            base.DisposeContext = true;
+            DisposeContext = true;
         }
 
         public ApplicationRoleStore(DbContext context)
             : base(context)
         {
+
         }
     }
     

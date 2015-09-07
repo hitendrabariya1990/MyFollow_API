@@ -4,11 +4,16 @@
 
     <div class="form-horizontal">
         <!--<p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Add New</a></p>-->
-
+        <div class="form-group">
+            <label class="control-label col-md-2">Company Name:</label>
+            <div class="col-md-10">
+                <p>{{ ProductData.MainProduct.ProductOwner.CompanyName }}</p>
+            </div>
+        </div>
         <div class="form-group">
             <label class="control-label col-md-2">Product Name:</label>
             <div class="col-md-10">
-                <p>{{ ProductData.ProductName }}</p>
+                <p>{{ ProductData.MainProduct.ProductName }}</p>
             </div>
         </div>
         <div class="form-group">
@@ -26,25 +31,18 @@
         <div class="form-group">
             <label class="control-label col-md-2">Video :</label>
             <div class="col-md-10">
-                <iframe width="300" height="200" ng-src="{{getIframeSrc(ProductData.VideoLink)}}" />
+                <iframe width="300" height="200" ng-src="{{getIframeSrc(ProductData.VideoLink)}}" ></iframe>
                 <p></p>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-md-2">Images :</label>
             <div class="col-md-10">
-                <table>
-                    <tr>
-                        <td data-ng-repeat="items in ProductData.UploadImages">
-                            <img ng-src="../Images/{{items.ImageName}}" width="150px" height="150px" class="thumbnail">
-                        </td>
-
-                        <!--<td>
-                            <p><a data-ng-click="" href="javascript:;">Remove</a> </p>
-                        </td>-->
-
-                    </tr>
-                </table>
+                
+                <div data-ng-repeat="items in ProductData.UploadImages" class="col-md-3">
+                    <img ng-src="../Images/{{items.ImageName}}"  class="thumbnail">
+                </div>
+                  
 
             </div>
         </div>

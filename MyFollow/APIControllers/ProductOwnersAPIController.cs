@@ -1,32 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using MyFollow.DAL;
 using MyFollow.Models;
-using System.Web;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin;
-using Microsoft.Owin.Security;
-using System.Threading.Tasks;
-using System.Web.Http.Controllers;
+
+
 
 namespace MyFollow.APIControllers
 {
-    public class ProductOwnersAPIController : ApiController
+    public class ProductOwnersapiController : ApiController
     {
         private MyFollowContext db = new MyFollowContext();
-        public UserManager<IdentityUser> UserManager { get; private set; }
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
-
       
         // GET: api/ProductOwnersAPI
         public IEnumerable<ProductOwner> GetProductOwners()
@@ -65,8 +53,6 @@ namespace MyFollow.APIControllers
 
         [HttpPut]
         [Route("api/ProductOwnersAPI/PutProductOwner")]
-        //[ResponseType(typeof(ProductOwner))]
-        // PUT: api/ProductOwnersAPI/5
         [ResponseType(typeof(void))]
         [Authorize(Roles = "ProductOwner")]
         public IHttpActionResult PutProductOwner(int id, ProductOwner productOwner)
@@ -93,10 +79,6 @@ namespace MyFollow.APIControllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -114,14 +96,6 @@ namespace MyFollow.APIControllers
             {
                 return BadRequest(ModelState);
             }
-            var queryVals = HttpContext.Current.Request.Url.AbsoluteUri; 
-           //var message = queryVals["id"];
-            //string id = "";
-            //var user = await UserManager.FindByIdAsync(id);
-            //await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
-
-
-           // var emailid= UserManager.FindByEmail(email);
             db.ProductOwners.Add(productOwner);
             db.SaveChanges();
 

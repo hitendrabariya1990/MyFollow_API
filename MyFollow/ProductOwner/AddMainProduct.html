@@ -1,0 +1,45 @@
+﻿<h3>Add New Products</h3>
+
+<div data-ng-app data-ng-controller="ProductController" class="container" ng-init="GetallMainProducts()">
+
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-6">
+                <form name="addProduct"method="post" style="width:100%">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Product Name :</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" placeholder="Enter Product Name." data-ng-model="newProduct.ProductName" required />
+                        </div>
+                    </div>
+
+                    <br />
+                    <input type="submit" value="Add" data-ng-click="addMainProducts()" data-ng-disabled="!addProduct.$valid" class="btn btn-primary" />
+                    <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
+                    <br /><br />
+                </form>
+            </div>
+
+            <div class="col-md-6">
+
+                <table class="table table-bordered table-hover" style="width:100%">
+                    <tr>
+                        
+                        <th>Product List</th>
+                        <!--<th></th>-->
+                    </tr>
+
+                    <tr data-ng-repeat="items in MainProductList">
+                       
+                        <td>
+                            <p>{{ items.ProductName }}</p>
+                        </td>
+                        <!--<td>
+                            <p><a data-ng-click="deleteMainProduct(items.Id)" href="">Delete</a></p>
+                        </td>-->
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,7 +26,8 @@
         <li>@Html.ActionLink("Update Products", "Index", "Products")</li>
         <li>@Html.ActionLink("Edit Profile", "Edit", "ProductOwners")</li>
     <li>@Html.ActionLink("Home", "Index", "ProductOwners")</li*@
-                    <li data-ng-app data-ng-controller="ProductController"><a href="#/AddNewProduct/@ViewBag.Id">Add Product</a></li>
+                    <li data-ng-app data-ng-controller="ProductController"><a href="#/AddNewMainProduct/@ViewBag.Id">Add Product</a></li>
+                    <li data-ng-app data-ng-controller="ProductController"><a href="#/AddNewProduct/@ViewBag.Id">Add Product Update</a></li>
                     <li data-ng-app data-ng-controller="ProductController"><a href="#/ListProduct/@ViewBag.Id" >List Products</a></li>
                     <li data-ng-app data-ng-controller="ProductOwnerController" ><a  href="#/EditProductOwner/@ViewBag.Id">Edit Profile</a></li>
                     

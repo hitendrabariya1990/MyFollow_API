@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using MyFollow.DAL;
 using System.Net;
@@ -14,12 +11,13 @@ namespace MyFollow.Controllers
         private MyFollowContext db = new MyFollowContext();
 
        [Authorize(Roles = "User")]
-        public ActionResult ViewPages(string email)
+        public ActionResult ViewPages()
         {
-            ViewBag.Email = email;
+            //ViewBag.Email = email;
             return View();
         }
-       
+
+       [Authorize(Roles = "User")]
         public ActionResult Index()
         {
             //ViewBag.Email = email;

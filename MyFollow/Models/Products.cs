@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MyFollow.Models
 {
@@ -13,10 +10,7 @@ namespace MyFollow.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int Poid { get; set; }
-
-        [Required]
-        public string  ProductName { get; set; }
+        public int MProductId { get; set; }
 
         [StringLength(140, ErrorMessage = "It is more than 140 Character")]
         public string Introduction { get; set; }
@@ -26,13 +20,10 @@ namespace MyFollow.Models
 
         public string VideoLink { get; set; }
 
-
-      
+        [ForeignKey("MProductId")]
+        public virtual MainProduct MainProduct { get; set; }
 
         public List<UploadImages> UploadImages { get; set; }
-         
-        [ForeignKey("Poid")]
-        public virtual ProductOwner ProductOwner { get; set; }
     }
 
     public class ProductsList
@@ -41,6 +32,9 @@ namespace MyFollow.Models
 
         public int Poid { get; set; }
         public string CompanyName { get; set; }
+
+        public int MProductId { get; set; }
+
         public string ProductName { get; set; }
 
         public string Introduction { get; set; }
@@ -48,9 +42,10 @@ namespace MyFollow.Models
         public string Details { get; set; }
 
         public bool Flag { get; set; }
-        public string  UploadImagesName { get; set; }
+
+        public string UploadImagesName { get; set; }
 
         public string VideoLink { get; set; }
-     
+
     }
 }

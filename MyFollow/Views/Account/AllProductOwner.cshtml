@@ -64,7 +64,7 @@
     <th>
         @Html.DisplayNameFor(model => model.ApprovalFlag)
     </th>*@
-        <th></th>
+        <th>Status</th>
     </tr>
 
 @foreach (var item in Model) {
@@ -117,7 +117,7 @@
             @Html.DisplayFor(modelItem => item.ApprovalFlag)
         </td>*@
         <td>
-            @Html.ActionLink("Approve", "Approve", new { id = item.Id }) 
+            @Html.ActionLink("Approve", "Approve", new { id = item.Id }, new { @class = "btn btn-info" }) 
         </td>
     </tr>
 }

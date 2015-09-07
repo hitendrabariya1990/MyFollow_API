@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using MyFollow.ClassFile;
 using MyFollow.DAL;
 using MyFollow.Models;
 using System.Net;
-using System.Data.Entity;
 
 namespace MyFollow.Controllers
 {
@@ -24,6 +16,8 @@ namespace MyFollow.Controllers
     public class AccountController : Controller
     {
         MyFollowContext db = new MyFollowContext();
+        public List<RegisterViewModel> RegList;
+
         public AccountController()
         {
         }
@@ -87,11 +81,10 @@ namespace MyFollow.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-        
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+      //  [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -104,21 +97,19 @@ namespace MyFollow.Controllers
                 case SignInStatus.Success:
                     var user = await UserManager.FindByEmailAsync(model.Email);
                     var rolename= await UserManager.GetRolesAsync(user.Id);
-                    if (rolename[0] == "ProductOwner" && user.EmailConfirmed == true)
+                    if (rolename[0] == "ProductOwner" && user.EmailConfirmed)
                     {
-                        //var Pro = db.ProductOwners.FirstOrDefault(x=>x.EmailId== user.Email);
                         return RedirectToAction("Index", "ProductOwners", new { email = user.Email });
                     }
-                    else if (rolename[0] == "Admin" )
+                    if (rolename[0] == "Admin" )
                     {
                         return RedirectToAction("Index"); 
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
-                case SignInStatus.Failure:
+                //case SignInStatus.RequiresVerification:
+                //    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
@@ -129,19 +120,18 @@ namespace MyFollow.Controllers
          [Authorize(Roles = "Admin")]
         public ActionResult AllProductOwner()
         {
-            ApplicationUser user1 = new ApplicationUser();
-            var user = UserManager.Users.ToList().Where(r => r.EmailConfirmed == false && r.CompanyName != "");
-            List<RegisterViewModel> regList=new List<RegisterViewModel>();
-            foreach(var item in user)
+           var user = UserManager.Users.ToList().Where(r => r.EmailConfirmed == false && r.CompanyName != null);
+            RegList = new List<RegisterViewModel>();
+            foreach (var item in user)
             {
-                RegisterViewModel registereg = new RegisterViewModel();
-                registereg.Id = item.Id;
-                registereg.Name = item.Name;
-                registereg.CompanyName = item.CompanyName;
-                registereg.Email = item.Email;
-                regList.Add(registereg);
+                var register = new RegisterViewModel();
+                register.Id = item.Id;
+                register.Name = item.Name;
+                register.CompanyName = item.CompanyName;
+                register.Email = item.Email;
+                RegList.Add(register);
             }
-            return View(regList);
+            return View(RegList);
         }
 
          [Authorize(Roles = "Admin")]
@@ -149,19 +139,15 @@ namespace MyFollow.Controllers
         {
             if (ModelState.IsValid)
             {
-               // ProductOwner productOwner = db.ProductOwners.Find(id);
-               // productOwner.ApprovalFlag = true;
-               // db.Entry(productOwner).State = EntityState.Modified;
-               // db.SaveChanges();
-               //// var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-               // var user = UserManager.FindByEmailAsync(productOwner.EmailId);
-               // var callbackUrl = Url.Action("Login", "Account");
-               // await UserManager.SendEmailAsync(user.Id, "Admin Approve your account Sucessfully.", "Thank you For Confirming Your Details.Login For More Details Click on this link: <a href=\"" + callbackUrl + "\">link</a>");
-               // ViewBag.Link = callbackUrl;
-               // return RedirectToAction("AllProductOwner");
                 var code = await UserManager.GenerateEmailConfirmationTokenAsync(id);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
+                if (code != null)
+                {
+                    if (Request.Url != null)
+                    {
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = id, code }, protocol: Request.Url.Scheme);
+                        await UserManager.SendEmailAsync(id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    }
+                }
                 return RedirectToAction("AllProductOwner");
 
             }
@@ -183,8 +169,6 @@ namespace MyFollow.Controllers
             return View(productOwner);
         }
 
-        //
-        // GET: /Account/VerifyCode
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl)
         {
@@ -201,8 +185,6 @@ namespace MyFollow.Controllers
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl });
         }
 
-        //
-        // POST: /Account/VerifyCode
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -220,14 +202,12 @@ namespace MyFollow.Controllers
                     return RedirectToLocal(model.ReturnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
-                case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid code.");
                     return View(model);
             }
         }
 
-        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -238,8 +218,7 @@ namespace MyFollow.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/Register
+       // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -248,40 +227,38 @@ namespace MyFollow.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email,Name=model.Name,CompanyName=model.CompanyName };
-                var result = await UserManager.CreateAsync(user, model.Password);
+               // var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
-                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thank you For Confirming Your Details.Registrer With More Details Click this link: <a href=\"" + callbackUrl + "\">link</a>");
-                   // ViewBag.Link = callbackUrl;
                     ViewBag.EmaiId = user.Email;
                     return View("ConfirmRegistration");
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
             if (userId > 0 || code == null)
             {
                 var result = await UserManager.ConfirmEmailAsync(userId, code);
-                if (result.Succeeded)
+                var user = await UserManager.FindByIdAsync(userId);
+                if (user != null)
                 {
-                    return RedirectToAction("AddProductOwner", new { id = userId });
-                  //  return Redirect("/#/NewProductOwner/?id="+userId);
-                }
-                else
-                {
-                    return View("Error");
+                    var productowner = db.ProductOwners.FirstOrDefault(x => x.EmailId == user.Email);
+                    if (productowner == null)
+                    {
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction("AddProductOwner", new { id = userId });
+                        }
+                    }
+                    return View("AlreadyRegister");
                 }
             }
             return View("Error");
@@ -289,19 +266,11 @@ namespace MyFollow.Controllers
 
         public async Task<ActionResult> AddProductOwner(int id)
         {
-            
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var user = await UserManager.FindByIdAsync(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
-           // await UserManager.AddToRolesAsync(user.Id, "ProductOwner");
-            
-            //ProductOwner productOwner = new ProductOwner();
             ViewBag.Email = user.Email;
             TempData["EmailId"] = user.Email;
 
@@ -325,21 +294,20 @@ namespace MyFollow.Controllers
             {
                 db.ProductOwners.Add(productOwner);
                 db.SaveChanges();
+               // var user = UserManager.FindByIdAsync(Convert.ToInt32(User.Identity.GetUserId()));
+              //  UserManager.UpdateAsync();
                 return View("ConfirmApproval");
             }
 
            return View("ConfirmApproval");
         }
-        //
-        // GET: /Account/ForgotPassword
+        
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -350,39 +318,32 @@ namespace MyFollow.Controllers
                 var user = await UserManager.FindByNameAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
-
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
-                ViewBag.Link = callbackUrl;
+                if (Request.Url != null)
+                {
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code1 = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                    ViewBag.Link = callbackUrl;
+                }
                 return View("ForgotPasswordConfirmation");
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
-        // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // GET: /Account/ResetPassword
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
             return code == null ? View("Error") : View();
         }
 
-        //
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -407,62 +368,21 @@ namespace MyFollow.Controllers
             return View();
         }
 
-        //
-        // GET: /Account/ResetPasswordConfirmation
+      
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
         }
 
-        //
-        // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
-        // GET: /Account/SendCode
-        [AllowAnonymous]
-        public async Task<ActionResult> SendCode(string returnUrl)
-        {
-            var userId = await SignInManager.GetVerifiedUserIdAsync();
-            if (userId > 0)
-            {
-                var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-                var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-                return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl });
-            }
-            return View("Error");
-        }
-
-        //
-        // POST: /Account/SendCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            // Generate the token and send it
-            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
-            {
-                return View("Error");
-            }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl });
-        }
-
-        //
-        // GET: /Account/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -476,15 +396,11 @@ namespace MyFollow.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    var user = await UserManager.FindAsync(loginInfo.Login);
-                    //return RedirectToAction("Index", "EndUser", new { email = user.Email });
                     return RedirectToAction("ViewPages", "EndUser");
-                   // return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
-                case SignInStatus.Failure:
+                //case SignInStatus.RequiresVerification:
+                //    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
                 default:
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
@@ -493,8 +409,6 @@ namespace MyFollow.Controllers
             }
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -518,10 +432,10 @@ namespace MyFollow.Controllers
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await UserManager.AddToRolesAsync(user.Id, "User");
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        await UserManager.AddToRolesAsync(user.Id, "User");
                         return RedirectToAction("ViewPages", "EndUser");
                     }
                 }
@@ -532,8 +446,6 @@ namespace MyFollow.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()

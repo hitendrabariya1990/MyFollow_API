@@ -1,20 +1,23 @@
 ﻿
 <h3>Add New Products</h3>
 
-<div data-ng-app data-ng-controller="ProductController" class="container">
+<div data-ng-app data-ng-controller="ProductController" class="container" >
 
     <div class="form-horizontal">
-        <form name="addProduct" enctype="multipart/form-data" method="post" style="width:1000px;margin:0px auto;">
+        <form name="addProduct" enctype="multipart/form-data" method="post" style="width:100%">
             <div class="form-group">
                 <label class="control-label col-md-2">Product Name :</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" placeholder="Enter Product Name."  data-ng-model="newProduct.ProductName" required />
+                <div class="col-md-10" ng-init="GetallMainProducts()">
+                    <!--<input type="text" class="form-control" placeholder="Enter Product Name." required />-->
+                    <select data-ng-model="newProduct.MProductId" ng-options="obj.Id as obj.ProductName for obj in MainProductList" class="form-control">
+                        <option value="">-- Select a Product --</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-2">Introduction :</label>
                 <div class="col-md-10">
-                    <input type="text" placeholder="Enter Introduction Up to 140 Character." name="Introduction" class="form-control" data-ng-model="newProduct.Introduction" ng-minlength=3 ng-maxlength=140 required />
+                    <input type="text" placeholder="Enter Introduction ." name="Introduction" class="form-control" data-ng-model="newProduct.Introduction" ng-minlength=3 ng-maxlength=140 required />
                     <div role="alert">
                         <span style="color:red;" class="has-error" ng-show="addProduct.Introduction.$error.minlength">
                             Enter More then 3 Character.
@@ -28,7 +31,7 @@
             <div class="form-group">
                 <label class="control-label col-md-2">Details:</label>
                 <div class="col-md-10">
-                    <textarea placeholder="Enter Details Up to 1000 Character." name="Details" class="form-control" data-ng-model="newProduct.Details" ng-minlength=3 ng-maxlength=1000 required />
+                    <textarea placeholder="Enter Details ." name="Details" class="form-control" data-ng-model="newProduct.Details" ng-minlength=3 ng-maxlength=1000 required></textarea>
                     <div role="alert">
                         <span style="color:red;" class="has-error" ng-show="addProduct.Details.$error.minlength">
                             Enter More then 3 Character.
@@ -67,7 +70,7 @@
                 </div>
             </div>
 
-           
+
             <br />
             <input type="submit" value="Add" data-ng-click="addProducts()" data-ng-disabled="!addProduct.$valid" class="btn btn-primary" />
             <input type="button" value="Cancel" data-ng-click="toggleAdd()" class="btn btn-primary" />
